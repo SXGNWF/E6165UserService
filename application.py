@@ -174,7 +174,7 @@ def users():
     try:
         if req_info["method"] == "GET":
 
-            res = __user_service.query(req_info["query_params"])
+            res = __user_service.query(req_info["query_params"], req_info["headers"])
 
             if res is not None:
                 rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
