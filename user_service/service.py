@@ -36,7 +36,7 @@ class UserService:
 
         return res
 
-    def query(self, query_params):
+    def query(self, query_params, headers):
 
         conn = pymysql.connect(**self.c_info)
         cur = conn.cursor()
@@ -72,19 +72,19 @@ class UserService:
                 temp_dict["data"] = q_res
                 result["data"].append(temp_dict)
             result["links"].append({"rel": "self",
-                                    "href": "https://localhost:8080/api/users?limit={}&offset={}".format(query_limit, query_offset)})
+                                    "href": "http://{}/api/users?limit={}&offset={}".format(headers['Host'], query_limit, query_offset)})
             if (query_offset - query_limit) >= 0:
                 result["links"].append({"rel": "prev",
-                                        "href": "https://localhost:8080/api/users?limit={}&offset={}".format(query_limit, query_offset - query_limit)})
+                                        "href": "http://{}/api/users?limit={}&offset={}".format(headers['Host'], query_limit, query_offset - query_limit)})
             else:
                 result["links"].append({"rel": "prev",
-                                        "href": "https://localhost:8080/api/users?limit={}&offset={}".format(query_limit, 0)})
+                                        "href": "http://{}/api/users?limit={}&offset={}".format(headers['Host'], query_limit, 0)})
             if len(query_results) > 0:
                 result["links"].append({"rel": "next",
-                                        "href": "https://localhost:8080/api/users?limit={}&offset={}".format(query_limit, query_offset + query_limit)})
+                                        "href": "http://{}/api/users?limit={}&offset={}".format(headers['Host'], query_limit, query_offset + query_limit)})
             else:
                 result["links"].append({"rel": "next",
-                                        "href": "https://localhost:8080/api/users?limit={}&offset={}".format(query_limit, query_offset)})
+                                        "href": "http://{}/api/users?limit={}&offset={}".format(headers['Host'], query_limit, query_offset)})
         else:
             result = self.get_by_last_name(cur, query_limit, query_offset, query_last_name)
 
